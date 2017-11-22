@@ -61,7 +61,7 @@ public class BookController {
 		return mockBookService.getList();
 	}
 	
-	@RequestMapping(value =	"/edit/{id}", method = {RequestMethod.PUT, RequestMethod.GET})
+	@RequestMapping(value =	"/edit/{id}", method = RequestMethod.PUT)
 	@ResponseBody
 	public List<Book> editBook(@RequestBody String editedBook,
 							   @PathVariable long id ){

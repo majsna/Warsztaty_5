@@ -3,13 +3,12 @@ $(function(){
 	var $bookList = $('.bookList');
 	var $formElem = $('form');
 	var $delButtons = $('.remove');
-//	var $titleElems = $('p').addClass('showDetails');
 	
 	function addBook(book){
 		var $newLi = $('<li>', {class: 'list-group-item list-group-item-action'});
 		var $newP = $('<p>', {class: 'showDetails'}).text(book.title+"   ").attr('data-id', book.id).css('display', 'inline');
 		var $newDel = $('<button>', {class: 'remove btn btn-outline-info'}).text('Delete').attr('data-id', book.id);
-		var $newDiv = $('<div>', { class: book.id }).css('display', 'inline');
+		var $newDiv = $('<div>', { class: book.id }).css('display', 'block');
 		$newLi.append($newP);
 		$newLi.append($newDel);
 		$newLi.append($newDiv);
@@ -105,25 +104,25 @@ $(function(){
 		$newIsbn = $('<li>').text('Isbn: '+book.isbn).css('font-style','italic');
 		$newEdit = $('<button>', {class: 'edit btn btn-outline-info'}).text('Edit').attr('data-id', book.id);
 		
-		$editForm = $('<form>',{class: 'edit'}).css('display', 'none').attr('data-id', book.id).attr('accept-charset','utf-8');
+		$editDiv = $('<div>',{class: 'edit'}).css('display', 'none').attr('data-id', book.id).attr('accept-charset','utf-8');
 		$inputTitle = $('<input>').attr('type','text').attr('name','title').attr('placeholder','new title');
 		$inputAuthor = $('<input>').attr('type','text').attr('name','author').attr('placeholder','new author');
 		$inputPublisher = $('<input>').attr('type','text').attr('name','publisher').attr('placeholder','new publisher');
 		$inputType = $('<input>').attr('type','text').attr('name','type').attr('placeholder','new type');
 		$inputIsbn = $('<input>').attr('type','text').attr('name','isbn').attr('placeholder','new isbn');
-		$saveInput = $('<input>',{class: 'save btn btn-outline-info'}).attr('type','submit').attr('value','Save').attr('data-id', book.id);		
+		$saveBtn = $('<button>',{class: 'save btn btn-outline-info'}).text('Save').attr('data-id', book.id);		
 		
-		$editForm.append($inputTitle);
-		$editForm.append('<br>');
-		$editForm.append($inputAuthor);
-		$editForm.append('<br>');
-		$editForm.append($inputPublisher);
-		$editForm.append('<br>');
-		$editForm.append($inputType);
-		$editForm.append('<br>');
-		$editForm.append($inputIsbn);
-		$editForm.append('<br>');
-		$editForm.append($saveInput);
+		$editDiv.append($inputTitle);
+		$editDiv.append('<br>');
+		$editDiv.append($inputAuthor);
+		$editDiv.append('<br>');
+		$editDiv.append($inputPublisher);
+		$editDiv.append('<br>');
+		$editDiv.append($inputType);
+		$editDiv.append('<br>');
+		$editDiv.append($inputIsbn);
+		$editDiv.append('<br>');
+		$editDiv.append($saveBtn);
 		
 		$newUl.append($newAuthor);
 		$newUl.append($newId);
@@ -131,7 +130,7 @@ $(function(){
 		$newUl.append($newType);
 		$newUl.append($newIsbn);
 		$newUl.append($newEdit);
-		$newUl.append($editForm);
+		$newUl.append($editDiv);
 		
 		return $newUl;
 	}
@@ -149,14 +148,13 @@ $(function(){
 		})
 		.done(function(book){
 	
-//				$div.append( addBookDetails(book) );
 			if( $div.children().length == 0 ){
-				$div.append(addBookDetails(book));
+				$div.append(addBookDetails(book)).hide().slideDown();
 			}else{
 				if($div.css('display')=='none'){
-					$div.css('display', 'inline');
-				}else {				
-					$div.css('display', 'none');				
+					$div.css('display', 'block').hide().slideDown();
+				}else {	
+					$div.css('display', 'none').show().slideUp();				
 				}
 			}
 	
@@ -172,41 +170,33 @@ $(function(){
 	$bookList.on('click', 'button.edit', function(){
 		
 		if( $(this).next().css('display')=='none' ){
-			$(this).next().css('display', 'block');
+			$(this).next().css('display', 'block').hide().slideDown();
 			$(this).text('Cancel');
 		}else{
-			$(this).next().css('display', 'none');
+			$(this).next().css('display', 'none').show().slideUp();
 			$(this).text('Edit');
 		}
 		
 		
 	})
 	
-	var $editFormElems = $('form.edit');
-	
-	$bookList.delegate('submit','form.edit', function(){
+	$bookList.delegate('.save','click', function(){
 		
-		event.preventDefault();
+//		event.preventDefault();
+		var $div = $(this).closest('div');
 		
 		var editedBook = {
-//				id: $(this).attr('data-id'),
-				isbn: $(this).find('[name=isbn]').val(),
-				title: $(this).find('[name=title]').val(),
-				author: $(this).find('[name=author]').val(),
-				publisher: $(this).find('[name=publisher]').val(),
-				type: $(this).find('[name=type]').val(),
-				_method:"PUT"
-//				id: $editFormElems.find('[name=bookId]').val(),
-//				isbn: $editFormElems.find('[name=isbn]').val(),
-//				title: $editFormElems.find('[name=title]').val(),
-//				author: $editFormElems.find('[name=author]').val(),
-//				publisher: $editFormElems.find('[name=publisher]').val(),
-//				type: $editFormElems.find('[name=type]').val()
+				id: $div.attr('data-id'),
+				isbn: $div.find('[name=isbn]').val(),
+				title: $div.find('[name=title]').val(),
+				author: $div.find('[name=author]').val(),
+				publisher: $div.find('[name=publisher]').val(),
+				type: $div.find('[name=type]').val()
 				
 		};
 		
 		$.ajax({
-			url: '/Warsztaty5/books/edit/'+$(this).attr('data-id'),
+			url: '/Warsztaty5/books/edit/'+$div.attr('data-id'),
 			method: 'PUT',
 			data: JSON.stringify(editedBook),
 			dataType: 'json',
@@ -215,8 +205,6 @@ $(function(){
 //		.done(function(book){
 //			addBook(book);
 		.done(function(response){
-			console.log(elem);
-			console.log(elem.attr('data-id'));
 			console.log('Book edited successfully.')
 		})
 		.fail(function(response){
