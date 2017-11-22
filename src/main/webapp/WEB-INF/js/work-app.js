@@ -36,7 +36,7 @@ $(function(){
 		event.preventDefault();
 		
 		var book = {
-				id: "0",
+				id: parseInt( $('ul.bookList').children().length ) + 1,
 				isbn: $formElem.find('[name=isbn]').val(),
 				title: $formElem.find('[name=title]').val(),
 				author: $formElem.find('[name=author]').val(),
@@ -57,9 +57,8 @@ $(function(){
 				dataType: 'json',
 				contentType: 'application/json'
 			})
-//			.done(function(book){
-//				addBook(book);
 			.done(function(response){
+				addBook(book);
 				console.log('Book added successfully.')
 			})
 			.fail(function(response){
@@ -205,7 +204,16 @@ $(function(){
 //		.done(function(book){
 //			addBook(book);
 		.done(function(response){
-			console.log('Book edited successfully.')
+			console.log('Book edited successfully.');
+			console.log( $div.closest('li').children().eq(0) );
+			$div.closest('li').children().eq(0).text( $div.find('[name=title]').val() );
+			$div.closest('ul').children().eq(0).text( 'Author: '+ $div.find('[name=author]').val());
+			$div.closest('ul').children().eq(2).text( 'Publisher: '+ $div.find('[name=publisher]').val());
+			$div.closest('ul').children().eq(3).text( 'Type: '+ $div.find('[name=type]').val());
+			$div.closest('ul').children().eq(4).text( 'Isbn: '+ $div.find('[name=isbn]').val());
+			$div.css('display', 'none').show().slideUp();
+			$div.closest('ul').find('button.edit').text('Edit');
+			
 		})
 		.fail(function(response){
 			alert('error saving book');
