@@ -7,7 +7,7 @@ $(function(){
 	function addBook(book){
 		var $newLi = $('<li>', {class: 'list-group-item list-group-item-action'});
 		var $newP = $('<p>', {class: 'showDetails'}).text(book.title+"   ").attr('data-id', book.id).css('display', 'inline');
-		var $newDel = $('<button>', {class: 'remove btn btn-outline-info'}).text('Delete').attr('data-id', book.id);
+		var $newDel = $('<button>', {class: 'remove btn btn-outline-info'}).text('Delete').attr('data-id', book.id).css('float','right');
 		var $newDiv = $('<div>', { class: book.id }).css('display', 'block');
 		$newLi.append($newP);
 		$newLi.append($newDel);
@@ -35,8 +35,14 @@ $(function(){
 		
 		event.preventDefault();
 		
+		if($('ul.bookList').children().last().find('p').attr('data-id') == null){
+			var newId = 1;
+		}else{
+			var newId = parseInt( $('ul.bookList').children().last().find('p').attr('data-id') ) + 1;
+		}
+		
 		var book = {
-				id: parseInt( $('ul.bookList').children().length ) + 1,
+				id: newId,
 				isbn: $formElem.find('[name=isbn]').val(),
 				title: $formElem.find('[name=title]').val(),
 				author: $formElem.find('[name=author]').val(),
@@ -91,8 +97,6 @@ $(function(){
 	})
 	
 	//loading book by Id
-	var $titleElems = $('ul').find('.showDetails');
-	console.log($titleElems);
 	
 	function addBookDetails(book){
 		$newUl = $('<ul>').css('list-style-type', 'circle');
@@ -104,11 +108,11 @@ $(function(){
 		$newEdit = $('<button>', {class: 'edit btn btn-outline-info'}).text('Edit').attr('data-id', book.id);
 		
 		$editDiv = $('<div>',{class: 'edit'}).css('display', 'none').attr('data-id', book.id).attr('accept-charset','utf-8');
-		$inputTitle = $('<input>').attr('type','text').attr('name','title').attr('placeholder','new title');
-		$inputAuthor = $('<input>').attr('type','text').attr('name','author').attr('placeholder','new author');
-		$inputPublisher = $('<input>').attr('type','text').attr('name','publisher').attr('placeholder','new publisher');
-		$inputType = $('<input>').attr('type','text').attr('name','type').attr('placeholder','new type');
-		$inputIsbn = $('<input>').attr('type','text').attr('name','isbn').attr('placeholder','new isbn');
+		$inputTitle = $('<input>',{class: 'alert alert-info'}).attr('type','text').attr('name','title').attr('placeholder','new title');
+		$inputAuthor = $('<input>',{class: 'alert alert-info'}).attr('type','text').attr('name','author').attr('placeholder','new author');
+		$inputPublisher = $('<input>',{class: 'alert alert-info'}).attr('type','text').attr('name','publisher').attr('placeholder','new publisher');
+		$inputType = $('<input>',{class: 'alert alert-info'}).attr('type','text').attr('name','type').attr('placeholder','new type');
+		$inputIsbn = $('<input>',{class: 'alert alert-info'}).attr('type','text').attr('name','isbn').attr('placeholder','new isbn');
 		$saveBtn = $('<button>',{class: 'save btn btn-outline-info'}).text('Save').attr('data-id', book.id);		
 		
 		$editDiv.append($inputTitle);
@@ -129,6 +133,7 @@ $(function(){
 		$newUl.append($newType);
 		$newUl.append($newIsbn);
 		$newUl.append($newEdit);
+		$newUl.append('<hr>');
 		$newUl.append($editDiv);
 		
 		return $newUl;
@@ -151,7 +156,7 @@ $(function(){
 				$div.append(addBookDetails(book)).hide().slideDown();
 			}else{
 				if($div.css('display')=='none'){
-					$div.css('display', 'block').hide().slideDown();
+					$div.css('display', 'inline').hide().slideDown();
 				}else {	
 					$div.css('display', 'none').show().slideUp();				
 				}
@@ -168,11 +173,11 @@ $(function(){
 	
 	$bookList.on('click', 'button.edit', function(){
 		
-		if( $(this).next().css('display')=='none' ){
-			$(this).next().css('display', 'block').hide().slideDown();
+		if( $(this).next().next().css('display')=='none' ){
+			$(this).next().next().css('display', 'block').hide().slideDown();
 			$(this).text('Cancel');
 		}else{
-			$(this).next().css('display', 'none').show().slideUp();
+			$(this).next().next().css('display', 'none').show().slideUp();
 			$(this).text('Edit');
 		}
 		
@@ -181,7 +186,6 @@ $(function(){
 	
 	$bookList.delegate('.save','click', function(){
 		
-//		event.preventDefault();
 		var $div = $(this).closest('div');
 		
 		var editedBook = {
@@ -201,11 +205,8 @@ $(function(){
 			dataType: 'json',
 			contentType: 'application/json'
 		})
-//		.done(function(book){
-//			addBook(book);
 		.done(function(response){
 			console.log('Book edited successfully.');
-			console.log( $div.closest('li').children().eq(0) );
 			$div.closest('li').children().eq(0).text( $div.find('[name=title]').val() );
 			$div.closest('ul').children().eq(0).text( 'Author: '+ $div.find('[name=author]').val());
 			$div.closest('ul').children().eq(2).text( 'Publisher: '+ $div.find('[name=publisher]').val());

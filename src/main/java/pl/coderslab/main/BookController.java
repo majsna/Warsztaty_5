@@ -50,9 +50,9 @@ public class BookController {
 				
 		try {
 			Book newBook = mapper.readValue(book, Book.class);
-			String lastIdStr = String.valueOf(lastId);
-			newBook.setId(lastIdStr);
-			lastId++;
+//			String lastIdStr = String.valueOf(lastId);
+//			newBook.setId(lastIdStr);
+//			lastId++;
 			mockBookService.addToList(newBook);
 		} catch (IOException e) {
 			e.printStackTrace();
