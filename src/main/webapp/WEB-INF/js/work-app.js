@@ -156,7 +156,7 @@ $(function(){
 				$div.append(addBookDetails(book)).hide().slideDown();
 			}else{
 				if($div.css('display')=='none'){
-					$div.css('display', 'inline').hide().slideDown();
+					$div.css('display', 'block').hide().slideDown();
 				}else {	
 					$div.css('display', 'none').show().slideUp();				
 				}

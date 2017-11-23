@@ -4,6 +4,9 @@ import java.awt.PageAttributes.MediaType;
 import java.io.IOException;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,9 +21,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequestMapping("/books")
 public class BookController {
 	
-	private long lastId = 4L;
+//	private long lastId = 4L;	
+	public MockBookService mockBookService;
 	
-	public MockBookService mockBookService = new MockBookService();
+	@Autowired
+	public BookController(MockBookService mockBookService) {
+		this.mockBookService = mockBookService;
+	}
 		
 	@RequestMapping("/")
 	@ResponseBody
@@ -78,6 +85,7 @@ public class BookController {
 					b.setPublisher(newBook.getPublisher());
 					b.setType(newBook.getType());
 					b.setIsbn(newBook.getIsbn());
+					mockBookService.updateBook(b);
 				}
 			}
 			

@@ -34,6 +34,10 @@ public class Book {
 	public void setId(String id) {		
 		this.id = Long.parseLong(id);
 	}
+	
+	public void setId(long id) {		
+		this.id = id;
+	}
 
 	public String getIsbn() {
 		return isbn;
