@@ -14,6 +14,8 @@ $(function(){
 		$newLi.append($newDiv);
 		
 		$bookList.append($newLi);
+        
+        
 		
 	}
 		

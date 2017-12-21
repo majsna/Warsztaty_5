@@ -1,10 +1,7 @@
 package pl.coderslab.main;
 
-import java.awt.PageAttributes.MediaType;
 import java.io.IOException;
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,8 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 @RequestMapping("/books")
 public class BookController {
-	
-//	private long lastId = 4L;	
+		
 	public MockBookService mockBookService;
 	
 	@Autowired
@@ -57,9 +52,6 @@ public class BookController {
 				
 		try {
 			Book newBook = mapper.readValue(book, Book.class);
-//			String lastIdStr = String.valueOf(lastId);
-//			newBook.setId(lastIdStr);
-//			lastId++;
 			mockBookService.addToList(newBook);
 		} catch (IOException e) {
 			e.printStackTrace();

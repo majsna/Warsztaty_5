@@ -25,7 +25,6 @@
 <body>
 
 	<div class="jumbotron">
-		<div class="container"></div>
 
 		<div class="row">
 
@@ -52,7 +51,7 @@
 
 		</div>
 	</div>
-	</div>
+
 </body>
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"
